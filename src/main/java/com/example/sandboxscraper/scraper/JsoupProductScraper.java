@@ -1,7 +1,6 @@
 package com.example.sandboxscraper.scraper;
 
 import com.example.sandboxscraper.dto.ProductDTO;
-import com.example.sandboxscraper.util.PriceUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,7 +8,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +41,6 @@ public class JsoupProductScraper implements ProductScraper {
     @Value("${app.selectors.link}")
     private String selLink;
 
-    @Value("${app.selectors.image}")
-    private String selImage;
-
     @Value("${app.selectors.next}")
     private String selNext;
 
@@ -68,16 +63,17 @@ public class JsoupProductScraper implements ProductScraper {
                 String category = card.selectFirst(selCategory) != null ? card.selectFirst(selCategory).text() : null;
                 Element a = card.selectFirst(selLink);
                 String link = a != null ? a.absUrl("href") : null;
-                Element img = card.selectFirst(selImage);
-                String imageUrl = img != null ? img.absUrl("src") : null;
 
-                BigDecimal price = PriceUtils.parsePrice(priceRaw);
-                String currency = PriceUtils.detectCurrency(priceRaw);
+                double price = 0.0;
+                if (priceRaw != null && !priceRaw.isBlank()) {
+                    priceRaw = priceRaw.replaceAll("[^0-9.,]", "").replace(",", ".");
+                    try {
+                        price = Double.parseDouble(priceRaw);
+                    } catch (NumberFormatException ignored) {}
+                }
 
                 if (title != null) {
-                    ProductDTO dto = new ProductDTO(
-                            null, title, price, currency, category, link, imageUrl, null, getName()
-                    );
+                    ProductDTO dto = new ProductDTO(title, category, price, link);
                     out.add(dto);
                 }
             }

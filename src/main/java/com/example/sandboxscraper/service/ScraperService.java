@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -53,7 +56,8 @@ public class ScraperService {
         List<ProductDTO> all = scraper.scrapeAll(maxPages);
         Map<String, List<ProductDTO>> grouped = all.stream()
                 .collect(Collectors.groupingBy(
-                        p -> p.getCategory() == null || p.getCategory().isBlank() ? "Uncategorized" : p.getCategory(),
+                        p -> (p.getCategory() == null || p.getCategory().isBlank())
+                                ? "Uncategorized" : p.getCategory(),
                         ConcurrentHashMap::new,
                         Collectors.toList()
                 ));
@@ -68,7 +72,17 @@ public class ScraperService {
     }
 
     private void ensureCache() throws Exception {
-        if (cache.isEmpty() || isExpired()) refreshCache();
+        if (cache.isEmpty() || isExpired()) {
+            refreshCache();
+        }
+    }
+
+    /** Düz liste (controller'lar bunu çağırıyor) */
+    public List<ProductDTO> getAll() throws Exception {
+        ensureCache();
+        return cache.values().stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     public Map<String, List<ProductDTO>> getAllGrouped() throws Exception {
@@ -86,8 +100,9 @@ public class ScraperService {
         String needle = q.toLowerCase(Locale.ROOT);
         return cache.values().stream()
                 .flatMap(List::stream)
-                .filter(p -> p.getName() != null && p.getName().toLowerCase(Locale.ROOT).contains(needle))
-                .limit(200) // aşırı büyümesin
+                .filter(p -> p.getName() != null
+                        && p.getName().toLowerCase(Locale.ROOT).contains(needle))
+                .limit(200)
                 .collect(Collectors.toList());
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/scraper")
 public class ScraperController {
 
     private final ScraperService service;
@@ -18,24 +18,40 @@ public class ScraperController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<Map<String, List<ProductDTO>>> all() throws Exception {
+    // Tüm ürünleri getir (düz liste)
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDTO>> all() throws Exception {
+        return ResponseEntity.ok(service.getAll());
+    }
+
+    // Gruplanmış ürünleri getir (kategori -> liste)
+    @GetMapping("/products/grouped")
+    public ResponseEntity<Map<String, List<ProductDTO>>> grouped() throws Exception {
         return ResponseEntity.ok(service.getAllGrouped());
     }
 
-    @GetMapping("/{category}")
+    // Belirli kategori
+    @GetMapping("/products/{category}")
     public ResponseEntity<List<ProductDTO>> byCategory(@PathVariable String category) throws Exception {
         return ResponseEntity.ok(service.getByCategory(category));
     }
 
-    @GetMapping("/search")
+    // Arama
+    @GetMapping("/products/search")
     public ResponseEntity<List<ProductDTO>> search(@RequestParam("q") String q) throws Exception {
         return ResponseEntity.ok(service.searchByName(q));
     }
 
-    @PostMapping("/refresh")
+    // Cache yenile
+    @PostMapping("/products/refresh")
     public ResponseEntity<String> refresh() throws Exception {
         service.refreshCache();
-        return ResponseEntity.ok("refreshed using engine=" + service.currentEngine());
+        return ResponseEntity.ok("Cache refreshed using " + service.currentEngine());
+    }
+
+    // Aktif engine
+    @GetMapping("/engine")
+    public ResponseEntity<String> engine() {
+        return ResponseEntity.ok(service.currentEngine());
     }
 }

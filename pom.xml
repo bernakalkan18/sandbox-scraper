@@ -21,7 +21,6 @@
 		<java.version>17</java.version>
 		<jsoup.version>1.17.2</jsoup.version>
 		<selenium.version>4.21.0</selenium.version>
-		<wdm.version>5.9.2</wdm.version>
 		<springdoc.version>2.5.0</springdoc.version>
 	</properties>
 
@@ -53,25 +52,18 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- JSoup (statik HTML için) -->
+		<!-- JSoup -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>${jsoup.version}</version>
 		</dependency>
 
-		<!-- Selenium (JS render için) -->
+		<!-- Selenium (WebDriver + Chrome) -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>${selenium.version}</version>
-		</dependency>
-
-		<!-- WebDriverManager (ChromeDriver otomatik) -->
-		<dependency>
-			<groupId>io.github.bonigarcia</groupId>
-			<artifactId>webdrivermanager</artifactId>
-			<version>${wdm.version}</version>
 		</dependency>
 
 		<!-- Test -->
@@ -87,14 +79,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
