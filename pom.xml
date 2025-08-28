@@ -23,6 +23,9 @@
 		<selenium.version>4.21.0</selenium.version>
 		<springdoc.version>2.5.0</springdoc.version>
 		<wdm.version>5.9.2</wdm.version>
+		<!-- Encoding sabitleme -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
@@ -67,14 +70,7 @@
 			<version>${selenium.version}</version>
 		</dependency>
 
-		<!-- Chrome 139 için DevTools binding (CDP uyarısını susturur) -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-devtools-v139</artifactId>
-			<version>${selenium.version}</version>
-		</dependency>
-
-		<!-- WebDriverManager (driver uyumu/kurulumu) -->
+		<!-- WebDriverManager -->
 		<dependency>
 			<groupId>io.github.bonigarcia</groupId>
 			<artifactId>webdrivermanager</artifactId>
@@ -90,10 +86,25 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- Encoding ayarı için resources plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
