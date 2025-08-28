@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JsoupProductScraper implements ProductScraper {
+public class JsoupProductScraper implements com.example.sandboxscraper.scraper.ProductScraper {
 
     @Value("${app.target.baseUrl}")
     private String baseUrl;
