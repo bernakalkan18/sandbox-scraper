@@ -44,7 +44,12 @@ POST   /api/products
 GET    /api/products/{category}    
 GET    /api/products/search
 
-Kullanılan Teknolojiler: Java 17, Spring Boot 3.3.x, Selenium WebDriver, Swagger / OpenAPI, Maven
+Kullanılan Teknolojiler:
+Java 17,
+Spring Boot 3.3.x,
+Selenium WebDriver,
+Swagger / OpenAPI,
+Maven
 
 
 
